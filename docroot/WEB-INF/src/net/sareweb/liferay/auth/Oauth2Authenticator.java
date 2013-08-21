@@ -23,19 +23,21 @@ public class Oauth2Authenticator implements Authenticator {
 
 	Log _log = LogFactoryUtil.getLog(this.getClass());
 
-	@Override
 	public int authenticateByEmailAddress(long arg0, String email,
 			String tokenOrPass, Map<String, String[]> arg3,
 			Map<String, String[]> arg4) throws AuthException {
 		_log.debug("authenticateByEmailAddress " + email);
 		if (isMobileRequest(arg3)) {
-			return authentiateWithGoogleToken(email, tokenOrPass);
+			try {
+				return authentiateWithGoogleToken(email, tokenOrPass);
+			} catch (Exception e) {
+				return authentiateWithLiferayPass(email, tokenOrPass);
+			}
 		} else {
 			return authentiateWithLiferayPass(email, tokenOrPass);
 		}
 	}
 
-	@Override
 	public int authenticateByScreenName(long arg0, String arg1, String arg2,
 			Map<String, String[]> arg3, Map<String, String[]> arg4)
 			throws AuthException {
@@ -43,7 +45,6 @@ public class Oauth2Authenticator implements Authenticator {
 		return Authenticator.FAILURE;
 	}
 
-	@Override
 	public int authenticateByUserId(long arg0, long arg1, String arg2,
 			Map<String, String[]> arg3, Map<String, String[]> arg4)
 			throws AuthException {
@@ -52,9 +53,9 @@ public class Oauth2Authenticator implements Authenticator {
 	}
 
 	private int authentiateWithGoogleToken(String email, String token) {
-		String[] clientIDs = { "401063832600-iqdgc5u0jt6taajp6pbqo8nedbsdv06j.apps.googleusercontent.com" };
+		String[] clientIDs = { "532011836106-mepq06u0d4hdihknuqlc6gbalj7hq2ti.apps.googleusercontent.com" };
 		Checker checker = new Checker(clientIDs,
-				"401063832600.apps.googleusercontent.com");
+				"532011836106-0ut2n2qf7mil507lkiv27u6ggaj90m5s.apps.googleusercontent.com");
 		GoogleIdToken.Payload payload = checker.check(token);
 		if (payload == null) {
 			_log.error("checker.problem() " + checker.problem());
