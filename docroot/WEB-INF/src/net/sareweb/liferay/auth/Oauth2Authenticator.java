@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import net.sareweb.liferay.auth.google.Checker;
+import net.sareweb.liferay.auth.util.Constants;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -53,9 +54,7 @@ public class Oauth2Authenticator implements Authenticator {
 	}
 
 	private int authentiateWithGoogleToken(String email, String token) {
-		String[] clientIDs = { "532011836106-mepq06u0d4hdihknuqlc6gbalj7hq2ti.apps.googleusercontent.com" };
-		Checker checker = new Checker(clientIDs,
-				"532011836106-0ut2n2qf7mil507lkiv27u6ggaj90m5s.apps.googleusercontent.com");
+		Checker checker = new Checker(Constants.CLIENT_IDS, Constants.AUDIENCE);
 		GoogleIdToken.Payload payload = checker.check(token);
 		if (payload == null) {
 			_log.error("checker.problem() " + checker.problem());
